@@ -7,4 +7,9 @@ var session = SparkSession.builder().appName("GeoAnalytics").master("yarn-client
 
 //map kpis parquet into dataframe
 val trees_df = session.read.format("csv").option("header", "true").load("/home/abdelghani/Downloads/2015_Street_Tree_Census_-_Tree_Data.csv")
-println(trees_df.count())
+
+trees_df.registerTempTable("trees")
+
+val trees_groupby_health_df = session.sql("SELECT health, count(tree_id) FROM trees GROUP BY(health)")
+
+trees_groupby_health_df.show()
